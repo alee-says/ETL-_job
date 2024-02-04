@@ -11,11 +11,29 @@ logging.basicConfig(level=logging.INFO)
 
 
 class RedditScraper:
+    """
+    A class for scraping comments from Reddit using PRAW library.
+    """
+
     def __init__(self, reddit_config):
+        """
+        Initializes the RedditScraper object.
+
+        Args:
+            reddit_config (dict): Configuration parameters for Reddit API.
+
+        """
         self.reddit_config = reddit_config
         self.reddit = self.authenticate_with_retry()
 
     def authenticate_with_retry(self):
+        """
+        Authenticates with Reddit API using the provided credentials.
+
+        Returns:
+            praw.Reddit: Authenticated Reddit API object.
+
+        """
         max_retries = 5
         for retry in range(max_retries):
             try:
@@ -38,6 +56,16 @@ class RedditScraper:
         return None
 
     def fetch_comments(self, url):
+        """
+        Fetches comments from a Reddit submission.
+
+        Args:
+            url (str): URL of the Reddit submission.
+
+        Returns:
+            list: List of dictionaries containing comment data.
+
+        """
         if not self.reddit:
             return []
 
@@ -76,6 +104,10 @@ class RedditScraper:
 
 
 def main():
+    """
+    Main function to execute the RedditScraper.
+
+    """
     url = "https://www.reddit.com/r/AskReddit/comments/12rk46t/there_is_a_greek_proverb_a_society_grows_great/"  # Add url here
 
     scraper = RedditScraper(reddit_config)
