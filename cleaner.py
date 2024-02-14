@@ -1,3 +1,4 @@
+# drop null values in this module
 
 import pandas as pd
 import re
@@ -12,6 +13,7 @@ import spacy
 
 stop_words = set(stopwords.words("english"))
 nlp = spacy.load("en_core_web_sm")
+
 
 def clean_comment(comment):
     """
@@ -38,18 +40,17 @@ def clean_comment(comment):
     lemmatized_comment = [token.text for token in doc if token.ent_type_ == ""]
     lemmatized_comment = " ".join(lemmatized_comment)
     lemmatized_comment = re.sub(" +", " ", lemmatized_comment)
+    lemmatized_comment = lemmatized_comment[:512]
     return lemmatized_comment.strip()
 
-df = pd.read_csv("reddit_comments_test.csv")
+
+df = pd.read_csv("reddit_comments.csv")
+df = df.dropna(subset=["comment_body"])
 df = df[df["comment_body"] != "[deleted]"]
 df_comments = df["comment_body"]
 
-if len(df_comments) < 10000:
-    cleaned_comments = df_comments.map(clean_comment)
-else:
-    with Pool(4) as p:
-        cleaned_comments = p.map(clean_comment, df_comments)
+cleaned_comments = df_comments.map(clean_comment)
 
 cleaned_comments = pd.Series(cleaned_comments)
 df["cleaned_comments"] = cleaned_comments
-df.to_csv("cleaned_comments.csv", index=False)
+df.to_csv("cleaned_comments_1.csv", index=False)
