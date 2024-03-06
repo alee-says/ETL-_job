@@ -45,6 +45,7 @@ def clean_comment(comment):
 
 
 df = pd.read_csv("reddit_comments.csv")
+df = df[df["comment_body"].apply(lambda x: len(str(x).split()) >= 3)]
 df = df.dropna(subset=["comment_body"])
 df = df[df["comment_body"] != "[deleted]"]
 df_comments = df["comment_body"]

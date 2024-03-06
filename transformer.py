@@ -1,5 +1,3 @@
-# drop null values before running this code
-
 import torch
 from transformers import AutoModelForSequenceClassification, AutoTokenizer, pipeline
 import pandas as pd
